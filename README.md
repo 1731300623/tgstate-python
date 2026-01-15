@@ -6,27 +6,22 @@
 
 ---
 
-## 🚀 一键部署（推荐）
+## ✅ 一键安装 / 一键更新（保留数据，推荐）
 
-无需下载代码，无需手动安装环境，只需一台安装了 Docker 的服务器（Linux/Windows/Mac 均可）。
-
-### 1️⃣ 默认一键安装（面向公众）
-默认使用 **8000** 端口，从 GHCR 拉取最新镜像，并持久化数据。
-
+默认端口 **8000**（最通用）
 ```bash
-docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate 2>/dev/null || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 8000:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
+docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate >/dev/null 2>&1 || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 8000:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
 ```
 
-**✅ 部署成功后：**
-请在浏览器访问：`http://您的服务器IP:8000`
+自定义端口 **15767**（可选）
+```bash
+docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate >/dev/null 2>&1 || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 15767:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
+```
 
----
-
-### 🛠️ 自定义端口示例
-如果您的 **8000** 端口不通或已被占用，可以使用以下命令改为 **15767** 端口：
+## 🧨 彻底重装（清空所有数据，不可逆）
 
 ```bash
-docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate 2>/dev/null || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 15767:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
+docker rm -f tgstate >/dev/null 2>&1 || true; docker volume rm tgstate-data >/dev/null 2>&1 || true; docker volume create tgstate-data >/dev/null 2>&1; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 15767:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
 ```
 
 ---
