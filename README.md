@@ -8,32 +8,24 @@
 
 ## ✅ 一键安装 / 一键更新（保留数据，推荐）
 
+> 💡 运行脚本时会提示输入端口（回车默认 8000），也可通过环境变量跳过交互：`PORT=15767 BASE_URL=https://...`
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/reset.sh | bash
 curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/purge.sh | bash
 ```
 
-域名用法示例：
+环境变量一键部署示例：
 
 ```bash
-BASE_URL="https://xxx" curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/install.sh | bash
-```
-
-默认端口 **8000**（最通用）
-```bash
-docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate >/dev/null 2>&1 || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 8000:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
-```
-
-自定义端口 **15767**（可选）
-```bash
-docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate >/dev/null 2>&1 || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 15767:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
+PORT=15767 BASE_URL="https://pan.example.com" curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/install.sh | bash
 ```
 
 ## 🧨 彻底重装（清空所有数据，不可逆）
 
 ```bash
-docker rm -f tgstate >/dev/null 2>&1 || true; docker volume rm tgstate-data >/dev/null 2>&1 || true; docker volume create tgstate-data >/dev/null 2>&1; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 15767:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
+docker rm -f tgstate >/dev/null 2>&1 || true; docker volume rm tgstate-data >/dev/null 2>&1 || true; docker volume create tgstate-data >/dev/null 2>&1; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 8000:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
 ```
 
 ---
