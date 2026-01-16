@@ -8,6 +8,18 @@
 
 ## ✅ 一键安装 / 一键更新（保留数据，推荐）
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/reset.sh | bash
+curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/purge.sh | bash
+```
+
+域名用法示例：
+
+```bash
+BASE_URL="https://xxx" curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/install.sh | bash
+```
+
 默认端口 **8000**（最通用）
 ```bash
 docker volume create tgstate-data >/dev/null 2>&1; docker rm -f tgstate >/dev/null 2>&1 || true; docker pull ghcr.io/buyi06/tgstate-python:latest && docker run -d --name tgstate --restart unless-stopped -p 8000:8000 -v tgstate-data:/app/data ghcr.io/buyi06/tgstate-python:latest
