@@ -127,5 +127,67 @@ location / {
 
 ---
 
+## 📺 在线预览 / 强制下载 / Range 说明（验收命令）
+
+系统对分享链接 (`/d/{id}`) 提供了智能的 Content-Disposition 策略和流式支持：
+
+1.  **默认策略**：
+    *   **可预览类型**（图片、PDF、文本、代码、音视频）：返回 `Content-Disposition: inline`，浏览器会尝试直接在标签页中打开预览。
+    *   **不可预览类型**（压缩包、二进制等）：返回 `Content-Disposition: attachment`，浏览器会直接触发下载。
+2.  **强制下载**：
+    *   在链接后添加 `?download=1` 参数（例如 `/d/GNW2KH?download=1`），无论文件类型，服务器一律返回 `attachment`，强制浏览器下载文件。
+3.  **Range 支持（音视频播放）**：
+    *   对于 `video/*` 和 `audio/*` 类型，服务器完整支持 HTTP Range 请求。
+    *   响应包含 `206 Partial Content`、`Accept-Ranges: bytes` 和 `Content-Range` 头。
+    *   这确保了在移动端（iOS/Android）和桌面端播放器中，您可以随意拖动进度条，支持断点续传。
+4.  **HEAD 请求支持**：
+    *   完整支持 `HEAD` 方法，返回与 `GET` 一致的 Headers（包含文件大小、类型等），方便反向代理缓存或下载工具探测。
+5.  **浏览器兼容性提示**：
+    *   不同浏览器对 PDF、视频编码（如 HEVC/MKV）的内置支持程度不同。如果遇到无法预览的情况，请尝试使用 `?download=1` 下载，或更换 Chrome/Edge 等现代浏览器。
+
+### 🚀 一键验收命令
+
+您可以在 Linux/macOS 终端中直接复制运行以下命令，验证服务器的响应头是否符合预期（请替换 `BASE_URL` 和 `ID` 为您的实际值）：
+
+```bash
+bash -lc '
+set -euo pipefail
+# 请修改为您自己的域名和文件ID
+BASE="${BASE_URL:-https://pan.777256.xyz}"
+ID="${ID:-GNW2KH}"
+URL="${BASE%/}/d/${ID}"
+
+# 获取最终跳转地址（处理可能的 HTTP->HTTPS 重定向）
+FINAL="$(curl -sS -L -o /dev/null -w "%{url_effective}" --max-time 15 "$URL" || true)"; [ -n "$FINAL" ] || FINAL="$URL"
+
+echo "URL=$URL"
+echo "FINAL=$FINAL"
+echo
+
+echo "== 1. HEAD 请求 (应返回 200/206，不应是 405) =="
+curl -sS -I --max-time 15 "$FINAL" | egrep -i "HTTP/|content-type|content-disposition|accept-ranges|content-range|content-length|x-content-type-options" || true
+echo
+
+echo "== 2. Default GET (可预览类型应 inline; 不可预览应 attachment) =="
+curl -sS -L -D - -o /dev/null --max-time 20 "$FINAL" | egrep -i "HTTP/|content-type:|content-disposition:|accept-ranges:|content-range:|content-length:|x-content-type-options:" || true
+echo
+
+echo "== 3. GET ?download=1 (必须 attachment) =="
+curl -sS -L -D - -o /dev/null --max-time 20 "$FINAL?download=1" | egrep -i "HTTP/|content-type:|content-disposition:" || true
+echo
+
+echo "== 4. Range bytes=0-1023 (音视频应 206 + Content-Range) =="
+curl -sS -L -D - -o /dev/null --max-time 20 -H "Range: bytes=0-1023" "$FINAL" | egrep -i "HTTP/|accept-ranges:|content-range:|content-length:" || true
+'
+```
+
+**✅ 验收通过标准：**
+*   **HEAD**: 返回状态码 200 OK（或 302 跳转后的 200），且包含 `Content-Type` 等头信息。
+*   **Default**: 对于 PDF/图片，`Content-Disposition` 应包含 `inline`。
+*   **Download**: 带 `?download=1` 时，`Content-Disposition` 必须包含 `attachment`。
+*   **Range**: 对于音视频文件，应返回 `HTTP/1.1 206 Partial Content` 且包含 `Content-Range` 头。
+
+---
+
 ## 📄 License
 MIT License
