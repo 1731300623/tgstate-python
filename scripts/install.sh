@@ -6,7 +6,7 @@ set -euo pipefail
 : "${BASE_URL:=}"
 : "${NAME:=tgstate}"
 : "${VOL:=tgstate-data}"
-: "${IMG:=ghcr.io/buyi06/tgstate-python@sha256:e897ce4c2b61e48a13ef0ec025dfd80148ed8669d75f688a1a8d81036fe116e5}"
+: "${IMG:=ghcr.io/1731300623/tgstate-python:latest}"
 
 # --- 端口交互逻辑 ---
 if [ -z "${PORT:-}" ]; then
