@@ -115,9 +115,8 @@ async def save_and_apply(payload: AppConfigRequest, request: Request):
             },
         },
     )
-    
-import hashlib
 
+    import hashlib
     pwd = (merged.get("PASS_WORD") or "").strip()
     if pwd:
         # 修改密码或保存配置时，如果涉及密码变更，更新 Cookie
@@ -127,7 +126,7 @@ import hashlib
         resp.set_cookie(key="tgstate_session", value=token, httponly=True, samesite="Lax", path="/")
     else:
         resp.delete_cookie("tgstate_session", path="/", httponly=True, samesite="Lax")
-        
+
     return resp
 
 
