@@ -10,17 +10,17 @@
 
 ### 1. 一键安装 / 一键更新（保留数据，推荐）
 ```bash
-bash -lc 'bash <(curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/install.sh)'
+bash -lc 'bash <(curl -fsSL https://raw.githubusercontent.com/1731300623/tgstate-python/main/scripts/install.sh)'
 ```
 
 ### 2. 一键重建容器（保留数据，专治容器跑飞）
 ```bash
-bash -lc 'bash <(curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/reset.sh)'
+bash -lc 'bash <(curl -fsSL https://raw.githubusercontent.com/1731300623/tgstate-python/main/scripts/reset.sh)'
 ```
 
 ### 3. 一键彻底清理（清空数据，不可逆）
 ```bash
-bash -lc 'bash <(curl -fsSL https://raw.githubusercontent.com/buyi06/tgstate-python/main/scripts/purge.sh)'
+bash -lc 'bash <(curl -fsSL https://raw.githubusercontent.com/1731300623/tgstate-python/main/scripts/purge.sh)'
 ```
 
 > 💡 运行脚本时会提示输入端口（回车默认 8000），也可通过环境变量跳过交互：`PORT=15767 BASE_URL=https://...`
